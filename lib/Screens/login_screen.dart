@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:zelus/Screens/login_form.dart';
+import 'package:zelus/Screens/signup_form.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -35,19 +37,23 @@ class LoginPage extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // Navigate to the signup screen
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => SignupScreen()),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login_Form()),
+                        );
                       },
                       child: Text('Login'),
                     ),
-                    Container(
-                      color: Color.fromRGBO(255, 255, 255, 0.09),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Sign-up"),
+                    GestureDetector(onTap: (){ Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignupForm()),
+                    );},
+                      child: Container(
+                        color: Color.fromRGBO(255, 255, 255, 0.09),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Sign-up"),
+                        ),
                       ),
                     ),
                   ],

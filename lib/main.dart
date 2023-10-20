@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zelus/Screens/Profile.dart';
 import 'package:zelus/Screens/login_screen.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      home: LoginPage(),
+      home: ProfileScreen(),
     );
   }
 }
