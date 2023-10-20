@@ -4,9 +4,19 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:get/get.dart';
 import 'package:solana/solana.dart';
+import 'package:zelus/Screens/Profile.dart';
+
+import '../Services/authService.dart';
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({super.key});
+  const SignupForm(
+      {super.key,
+      required this.name,
+      required this.email,
+      required this.isorg});
+  final String name;
+  final String email;
+  final bool isorg;
 
   @override
   State<SignupForm> createState() => _SignupFormState();
@@ -24,6 +34,7 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   Widget build(BuildContext context) {
+    AuthService _service = AuthService();
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -37,7 +48,6 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
-
           Center(
             child: Container(
               height: height * 0.8,
@@ -61,14 +71,14 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                   SizedBox(
                     height: height * 0.001,
-                  ),  Center(
+                  ),
+                  Center(
                     child: Text(
                       "Make A wallet",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
                   Padding(
-
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,8 +101,8 @@ class _SignupFormState extends State<SignupForm> {
                   Container(
                     height: height * 0.2,
                     decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 0.09),
-                       ),
+                      color: Color.fromRGBO(255, 255, 255, 0.09),
+                    ),
                     child: Column(
                       children: [
                         Row(
@@ -113,8 +123,7 @@ class _SignupFormState extends State<SignupForm> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             _mne,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ),
                       ],
@@ -158,7 +167,9 @@ class _SignupFormState extends State<SignupForm> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ElevatedButton(
-                        onPressed: () {_submit();},
+                        onPressed: () {
+                          _submit();
+                        },
                         child: Text('Sign-Up'),
                       ),
                     ),
@@ -185,9 +196,17 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   void _submit() async {
+    AuthService _service = AuthService();
+
     final keypair = await Ed25519HDKeyPair.fromMnemonic(_mne);
     final pair = keypair.address;
     await storage.write(key: 'password', value: key.text.trim());
     await storage.write(key: 'private_key', value: pair);
+
+    await _service
+        .createuser(widget.email, widget.name, pair, widget.isorg)
+        .then((value) {
+      Get.to(ProfileScreen());
+    });
   }
 }
