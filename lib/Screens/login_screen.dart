@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zelus/Screens/login_form.dart';
+import 'package:zelus/Screens/registeration_screen.dart';
 import 'package:zelus/Screens/signup_form.dart';
 
 class LoginPage extends StatelessWidget {
@@ -42,17 +43,17 @@ class LoginPage extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => Login_Form()),
                         );
                       },
-                      child: Text('Login'),
+                      child: Text('Have a wallet?'),
                     ),
                     GestureDetector(onTap: (){ Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignupForm()),
+                      MaterialPageRoute(builder: (context) => RegisterScreen()),
                     );},
                       child: Container(
                         color: Color.fromRGBO(255, 255, 255, 0.09),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("Sign-up"),
+                          child: Text("Create one!"),
                         ),
                       ),
                     ),

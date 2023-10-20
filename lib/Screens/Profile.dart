@@ -88,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               IconButton(
                                   onPressed: () async {
                                     await Clipboard.setData(
-                                        ClipboardData(text: _mne));
+                                        ClipboardData(text: _publicKey!));
                                   },
                                   icon: Icon(
                                     Icons.copy,
@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            _mne,
+                            _publicKey??"Generating",
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ),
@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Container(
-                    height: height * 0.12,
+                    height: height * 0.08,
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(255, 255, 255, 0.09),
                     ),
@@ -118,14 +118,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [ Text(
-                              "Balance",
+                              "Balance:",
                               style: TextStyle(color: Colors.white, fontSize: 20),
+                            ),Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _balance??"Fetching",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
                             ),
                               Spacer(),
                               IconButton(
-                                  onPressed: () async {
-                                    await Clipboard.setData(
-                                        ClipboardData(text: _mne));
+                                  onPressed: () {
+                                    _getBalance();
                                   },
                                   icon: Icon(
                                     Icons.refresh,
@@ -134,13 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Text(
-                            _mne,
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),
@@ -182,10 +181,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _balance = null;
     });
+
+    print(_publicKey);
     final getBalance = await client?.rpcClient
         .getBalance(_publicKey!, commitment: Commitment.confirmed);
     final balance = (getBalance!.value) / lamportsPerSol;
     setState(() {
+      print(balance.toString());
       _balance = balance.toString();
     });
   }

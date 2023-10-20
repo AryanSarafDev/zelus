@@ -37,6 +37,7 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
           ),
+
           Center(
             child: Container(
               height: height * 0.8,
@@ -60,8 +61,14 @@ class _SignupFormState extends State<SignupForm> {
                   ),
                   SizedBox(
                     height: height * 0.001,
+                  ),  Center(
+                    child: Text(
+                      "Make A wallet",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
                   ),
                   Padding(
+
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +158,7 @@ class _SignupFormState extends State<SignupForm> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {_submit();},
                         child: Text('Sign-Up'),
                       ),
                     ),
