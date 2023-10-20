@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:solana/solana.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,6 +12,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? _publicKey;
+  String? _balance;
+  SolanaClient? client;
+  final storage = const FlutterSecureStorage();
+  @override
+  void initState() {
+    super.initState();
+    _readPk();
+  }
   @override
   Widget build(BuildContext context) {
     TextEditingController key = TextEditingController();
@@ -145,4 +157,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+  void _readPk() async {
+    final mnemonic = await storage.read(key: 'mnemonic');
+    if (mnemonic != null) {
+      final keypair = await Ed25519HDKeyPair.fromMnemonic(mnemonic);
+      setState(() {
+        _publicKey = keypair.address;
+      });
+      _initializeClient();
+    }
+  }
+
+  void _initializeClient() async {
+    await dotenv.load(fileName: ".env");
+
+    client = SolanaClient(
+      rpcUrl: Uri.parse(dotenv.env['QUICKNODE_RPC_URL'].toString()),
+      websocketUrl: Uri.parse(dotenv.env['QUICKNODE_RPC_WSS'].toString()),
+    );
+    _getBalance();
+  }
+
+  void _getBalance() async {
+    setState(() {
+      _balance = null;
+    });
+    final getBalance = await client?.rpcClient
+        .getBalance(_publicKey!, commitment: Commitment.confirmed);
+    final balance = (getBalance!.value) / lamportsPerSol;
+    setState(() {
+      _balance = balance.toString();
+    });
+  }
 }
+
